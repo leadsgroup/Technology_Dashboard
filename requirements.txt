@@ -1,4 +1,4 @@
-/opt/render/project/src/.venv/bin/python3.10 pip install --upgrade pip
+pip install --upgrade pip
 dash==2.14.2
 dash_bootstrap_components==1.5.0
 dash_bootstrap_templates==1.1.2

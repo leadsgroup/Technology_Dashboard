@@ -50,8 +50,9 @@ def generate_battery_development_panel(Battery_Development):
 
     return battery_development_panel 
 
-def generate_flight_ops_aircraft_panel(Commercial_Batteries,US_Temperature_F): 
+def generate_flight_ops_aircraft_panel(Commercial_Batteries,US_Temperature_F,Flight_Ops): 
     flight_ops_electric_aircraft                    = select_flight_ops_electric_aircraft()   
+    flight_ops_electric_airline                     = select_flight_ops_electric_airline(Flight_Ops)   
     flight_ops_electric_aircraft_batt_mass_frac     = select_flight_ops_electric_aircraft_batt_mass_frac()   
     flight_ops_time_of_year                         = select_flight_ops_month_electric_aircraft(US_Temperature_F)
     flight_ops_fleet_adoption                       = select_flight_ops_electric_fleet_adoption() 
@@ -61,12 +62,13 @@ def generate_flight_ops_aircraft_panel(Commercial_Batteries,US_Temperature_F):
     cost_of_electricity                             = select_cost_of_electricity()
     
     flight_ops_aircraft_panel = dbc.Card([flight_ops_electric_aircraft,
-                                        electric_aircraft_battery, 
-                                        flight_ops_electric_aircraft_batt_mass_frac,
-                                        electric_aircraft_system_voltage,
-                                        electric_aircraft_propulsive_efficiency,
-                                        cost_of_electricity,
-                                        flight_ops_fleet_adoption,
-                                        flight_ops_time_of_year],body=True,)   
+                                          flight_ops_electric_airline, 
+                                          electric_aircraft_battery, 
+                                          flight_ops_electric_aircraft_batt_mass_frac,
+                                          electric_aircraft_system_voltage,
+                                          electric_aircraft_propulsive_efficiency,
+                                          cost_of_electricity,
+                                          flight_ops_fleet_adoption,
+                                          flight_ops_time_of_year],body=True,)   
     return  flight_ops_aircraft_panel
  

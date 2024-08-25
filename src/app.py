@@ -67,7 +67,7 @@ battery_metrics_panel               = generate_battery_metrics_panel(Commercial_
 motor_metrics_panel                 = generate_motor_metrics_panel(Electric_Motor_Development)
 battery_comparison_panel            = generate_battery_comparison_panel(Commercial_Batteries)   
 battery_development_panel           = generate_battery_development_panel(Battery_Development)    
-battery_flight_ops_aircraft_panel   = generate_flight_ops_aircraft_panel(Commercial_Batteries,US_Temperature_F)   
+battery_flight_ops_aircraft_panel   = generate_flight_ops_aircraft_panel(Commercial_Batteries,US_Temperature_F,Flight_Ops)   
  
 # Sustainable Aviation Fuel  
 saf_metrics_panel              = generate_saf_metrics_panel(Commercial_SAF)
@@ -185,7 +185,7 @@ app.layout = html.Div([
          dbc.Col([ 
              dbc.Card([  
                  dbc.CardBody([
-                              html.H5('Developed by the Lab for Electric Aircraft Design and Sustainability (LEADS) at the University of Illinois Urbana-Champaign, the Sustainable Aviation Technology Dashboard is a platform to examine the integration of new batteries, sustainable aviation fuel (SAF) and hydrogen propulsion technologies into future aircraft systems and assess their broader impact on society.'),
+                              html.H5('Developed by the Lab for Electric Aircraft Design and Sustainability (LEADS) at the University of Illinois Urbana-Champaign, the Sustainable Aviation Technology Dashboard is a platform to examine the integration of new energy sources such as sustainable aviation fuel (SAF), batteries and hydrogen propulsion technologies into future aircraft systems and assess their broader impact on society.'),
                             ], className='text-sm-center h5'),   
                  ],body=True)  
              ],  width=10),  
@@ -695,6 +695,7 @@ def update_motor_metrics_figure(selected_x_axis,selected_y_axis,switch_off):
     Output("electric_aircraft_yearly_emissions", "figure"),
     Output("electric_aircraft_CASM", "figure"),
     Input("electric_aircraft_type", "value"),
+    Input("electric_airline_type", "value"),
     Input("electric_aircraft_battery", "value"),
     Input("battery_mass_fraction", "value"),
     Input("electric_aircraft_system_voltage", "value"),
@@ -704,8 +705,8 @@ def update_motor_metrics_figure(selected_x_axis,selected_y_axis,switch_off):
     Input("electric_aircraft_charging_cost","value"),
     Input("color-mode-switch", "value"), 
 )   
-def update_flight_ops_map(aircraft,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off): 
-    fig_4,fig_5, fig_6 ,fig_7,fig_8,fig_9 = generate_flight_ops_map(Flight_Ops,Commercial_Batteries,aircraft,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off)     
+def update_flight_ops_map(aircraft,airline,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off): 
+    fig_4,fig_5, fig_6 ,fig_7,fig_8,fig_9 = generate_flight_ops_map(Flight_Ops,Commercial_Batteries,aircraft,airline,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off)     
     return fig_4,fig_5, fig_6 ,fig_7,fig_8 , fig_9  
  
 
@@ -831,17 +832,7 @@ def update_h2_color_ratio_bar(h2_selection_list_1,h2_selection_list_2,h2_ratios,
     else: 
         h2_fig  = generate_saf_slider_bar(Hydrogen,selected_h2,h2_ratios,switch_off)
     return h2_fig   
-
-#@callback(
-    #Output("h2_production_map", "figure"),
-    #Input("h2_feedstock_sector", "value"),
-    #Input("h2_process_sector", "value"),
-    #Input("color-mode-switch", "value"), 
-#) 
-#def update_h2_sector_map(selected_h2_feedstock,selected_h2_process,switch_off):     
-    #h2_fig_2 = generate_h2_dev_map(Hydrogen,selected_h2_feedstock,selected_h2_process,switch_off)
-    #return h2_fig_2  
-  
+ 
 @callback( 
     Output("h2_flight_ops_map", "figure"),   
     Output("h2_aircraft_passenger_range", "figure"),
@@ -895,7 +886,7 @@ def update_US_bat_temperature_map(month_no,switch_off):
 def update_EX_bat_temperature_map(month_no,switch_off): 
     temperature_filename = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.csv' 
     US_Temperature_F     = pd.read_csv(temperature_filename) 
-    fig_ex_6           = generate_US_EX_temperature_map(US_Temperature_F,month_no,switch_off)  
+    fig_ex_6             = generate_US_EX_temperature_map(US_Temperature_F,month_no,switch_off)  
     return fig_ex_6   
   
  
@@ -905,10 +896,7 @@ def update_EX_bat_temperature_map(month_no,switch_off):
     Output("EX_aircraft_airports", "figure"),
     Output("EX_aircraft_market_size", "figure"),
     Output("EX_aircraft_yearly_emissions", "figure"),    
-    Output("EX_aircraft_CASM", "figure"),  
-    Input("EX_TOGW", "value"),
-    Input("EX_L_D", "value"),
-    Input("EX_Max_Power", "value"),
+    Output("EX_aircraft_CASM", "figure"),   
     Input("EX_system_voltage", "value"), 
     Input("EX_battery_mass_fraction", "value"),
     Input("EX_aircraft_efficiency", "value"), 
@@ -922,9 +910,9 @@ def update_EX_bat_temperature_map(month_no,switch_off):
     Input("EX_aircraft_charging_cost", "value"), 
     Input("color-mode-switch", "value"), 
 )   
-def update_flight_ops_passenger_range_plot(EX_TOGW,EX_L_D,EX_Max_P,EX_system_V,EX_bat_frac,EX_eta,EX_cell_V,
+def update_flight_ops_passenger_range_plot(EX_system_V,EX_bat_frac,EX_eta,EX_cell_V,
                                            EX_capacity,EX_C_max,EX_e0,EX_Temp,EX_adoption,EX_month,cost_of_electricity,switch_off):  
-    fig_ex_4, fig_ex_5, fig_ex_6 ,fig_ex_7,fig_ex_8,fig_ex_9 = generate_EX_aircraft_flight_ops(Flight_Ops,EX_TOGW,EX_L_D,EX_Max_P,EX_system_V,EX_bat_frac,EX_eta,
+    fig_ex_4, fig_ex_5, fig_ex_6 ,fig_ex_7,fig_ex_8,fig_ex_9 = generate_EX_aircraft_flight_ops(Flight_Ops,EX_system_V,EX_bat_frac,EX_eta,
                                                                                       EX_cell_V, EX_capacity,EX_C_max,EX_e0,EX_Temp,EX_adoption,EX_month,cost_of_electricity,switch_off)  
     return fig_ex_4,fig_ex_5, fig_ex_6 ,fig_ex_7,fig_ex_8,fig_ex_9 
     

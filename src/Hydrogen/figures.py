@@ -181,7 +181,7 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
     # Plot Flight_Ops 
     #================================================================================================================================================     
     # Flight_Ops   
-    color_1               = px.colors.qualitative.Pastel[2]
+    color_1               = px.colors.qualitative.Pastel[10]
     color_2              = px.colors.qualitative.Alphabet[19]
     fig_1                = go.Figure()
     airport_marker_size  = 5
@@ -263,7 +263,7 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
     fig_2.add_trace(go.Histogram(histfunc="sum",
                                  x= Non_H2_Flights['Distance (miles)'],
                                y = Non_H2_Flights['Passengers'],
-                               name='Jet-A',
+                               name='Fossil Fuel',
                                xbins=dict(start=0, end=4000, size=500),
                                marker_color=color_1,)) 
 
@@ -303,7 +303,7 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
     sector_colors               = [color_2,color_1]
     Feasible_Passenger_Miles    = np.sum(np.array(H2_Flights['Passengers'])* np.array(H2_Flights['Distance (miles)']))
     Infeasible_Passenger_Miles  = np.sum(np.array(Non_H2_Flights[['Passengers']])* np.array(Non_H2_Flights[['Distance (miles)']]))
-    labels                      = ["Hydrogen", "Jet-A"] 
+    labels                      = ["Hydrogen Fleet", "Fossil Fuel Fleet"] 
     fig_4.add_trace(go.Pie(labels=labels,
                            values=[Feasible_Passenger_Miles, Infeasible_Passenger_Miles],
                          marker_colors=sector_colors)) 
@@ -318,9 +318,9 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
     #================================================================================================================================================   
     fig_5 = go.Figure()       
     month_names         = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']    
-    fig_5.add_trace(go.Scatter(x=month_names, y=CASM_w_H2_Aircraft, name = 'Hydrogen',
+    fig_5.add_trace(go.Scatter(x=month_names, y=CASM_w_H2_Aircraft, name = 'Hydrogen Aircraft',
                                line=dict(color= color_2, width=4)))  
-    fig_5.add_trace(go.Scatter(x=month_names, y=CASM_wo_H2_Aircraft, name='Jet-A',
+    fig_5.add_trace(go.Scatter(x=month_names, y=CASM_wo_H2_Aircraft, name='Fossil Fuel Aircraft',
                                line=dict(color= color_1, width=4)))  
     fig_5.update_layout( 
         height           = 400, 

@@ -5,50 +5,6 @@ import dash_bootstrap_components as dbc
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
 # Energy X Control Panel 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------  
-
-
-def select_flight_ops_BDL_aircraft_L_D():
-    L_D  = html.Div(
-        [
-            dbc.Label("Lift-to-Drag Ratio"),
-            dcc.Slider(12,20, 1,
-                value= 16,
-                id="EX_L_D", 
-            ),
-        ],
-        className="mb-4",
-    )
-    return L_D
-
-def select_flight_ops_BDL_aircraft_weight():
-    
-    W0  = html.Div(
-        [
-            dbc.Label("Takeoff Gross Weight (Ton)"),
-            dcc.Slider(25,200,5,
-                value= 60,
-                marks = {25: "25", 50: "50", 75: "75", 100: "100", 125: "125", 150: "150", 175: "175", 200: "200"},
-                id="EX_TOGW", 
-            ),
-        ],
-        className="mb-4",
-    )
-    return W0
-
-def select_BDL_aircraft_max_power():
-    
-    P_max = html.Div(
-        [
-            dbc.Label("Max Power (MW)"),
-            dcc.Slider(5, 35, 5,
-                value= 15,
-                id="EX_Max_Power", 
-            ),
-        ],
-        className="mb-4",
-    )
-    return P_max 
-
 def select_BDL_max_cell_voltage():
     
     voltage = html.Div(
@@ -97,8 +53,8 @@ def select_BDL_specific_energy():
     e_0 = html.Div(
         [
             dbc.Label("Specific Energy (Wh/kg)"),
-            dcc.Slider(200, 1000, 100,
-                value= 600,
+            dcc.Slider(400, 1200, 100,
+                value= 800,
                 id="EX_e0", 
             ),
         ],
@@ -165,8 +121,8 @@ def select_BDL_cost_of_electricity():
     charging_cost = html.Div(
         [
             dbc.Label("Cost of Electricity ($/kWh)"),
-            dcc.Slider(0.1, 1, 0.1,
-                value=0.3,
+            dcc.Slider(0.1,0.6, 0.05,
+                value=0.2,
                 id="EX_aircraft_charging_cost", 
             ),
         ],

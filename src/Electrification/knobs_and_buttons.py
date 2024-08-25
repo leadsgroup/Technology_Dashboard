@@ -320,11 +320,11 @@ def select_flight_ops_electric_aircraft_battery(Commercial_Batteries):
 def select_flight_ops_electric_aircraft():
     flight_ops_electric_aircraft = html.Div(
         [
-            dbc.Label("All-Electric Aircraft Model"),
+            dbc.Label("Aircraft Model"),
             dcc.Dropdown(
-                ['ATR 72-600','Embraer 190','Boeing 737 MAX-8','Airbus A320 neo'],
-                value = 'Boeing 737 MAX-8',
-                placeholder = 'Boeing 737 MAX-8',  
+                ['All','Commuter (19 Pax)','Regional (88 Pax)','Short-Haul (120 Pax)','Medium-Haul (189 Pax)','Long-Haul (368 Pax)'],
+                value = 'All',
+                placeholder = 'All',  
                 disabled = False,
                 clearable=False,
                 style = {'display': True, 'color': 'black'},
@@ -334,6 +334,25 @@ def select_flight_ops_electric_aircraft():
         className="mb-4",
     ) 
     return flight_ops_electric_aircraft
+
+def select_flight_ops_electric_airline(Flight_Ops): 
+    All = ['All']
+    airline_list = All + list(Flight_Ops['Airline'][1:].unique())   
+    flight_ops_electric_airline = html.Div(
+        [
+            dbc.Label("Airline"),
+            dcc.Dropdown(airline_list,
+                value = 'All',
+                placeholder = 'All',  
+                disabled    = False,
+                clearable   = False,
+                style = {'display': True, 'color': 'black'},
+                id="electric_airline_type",   
+            ),
+        ],
+        className="mb-4",
+    ) 
+    return flight_ops_electric_airline
 
 
 def select_flight_ops_electric_aircraft_batt_mass_frac():

@@ -167,8 +167,11 @@ def select_saf_fleet_adoption():
 
 def select_saf_airports(): 
     airport_names = [" Top 5 Airports"," Top 10 Airports"," Top 20 Airports", " Top 50 Airports",  " All Airports"]
-    airpots = html.Div(  [  dbc.Label("Select SAF Airport Hubs"), dcc.RadioItems( options = airport_names, value   = " Top 10 Airports", 
-                           id="saf_airports",  ),  ], className="mb-4", )   
+    airpots = html.Div(  [  dbc.Label("Select SAF Airport Hubs"),
+                            dcc.RadioItems( options = airport_names,
+                            value   = " Top 5 Airports", 
+                           id="saf_airports",  ),  ],
+                         className="mb-4", )   
     return airpots
 
 def select_feedstock_source(Commercial_SAF):  

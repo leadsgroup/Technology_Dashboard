@@ -481,7 +481,7 @@ def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,batter
     fig_4.add_trace(go.Scattergeo( 
         lon = Routes_and_Temp['Destination Longitude (Deg.)'],
         lat = Routes_and_Temp['Destination Latitude (Deg.)'], 
-        text = Routes_and_Temp['Destination City'],
+        text = Routes_and_Temp['Destination City Name'],
         mode = 'markers',
         marker = dict(
             size = airport_marker_size,
@@ -490,7 +490,7 @@ def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,batter
     fig_4.add_trace(go.Scattergeo( 
         lon = Routes_and_Temp['Origin Longitude (Deg.)'],
         lat = Routes_and_Temp['Origin Latitude (Deg.)'], 
-        text = Routes_and_Temp['Origin City'],
+        text = Routes_and_Temp['Origin City Name'],
         mode = 'markers',
         marker = dict(
             size = airport_marker_size,
@@ -541,7 +541,7 @@ def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,batter
     # Busiest Airports 
     #================================================================================================================================================    
     fig_6 = go.Figure()  
-    Airport_Routes     = Feasible_Routes[['E_Passengers','Origin Airport','Destination City']]
+    Airport_Routes     = Feasible_Routes[['E_Passengers','Origin Airport','Destination City Name']]
     Cumulative_Flights = Airport_Routes.groupby(['Origin Airport']).sum()
     Busiest_Airports   = Cumulative_Flights.sort_values(by=['E_Passengers'], ascending = False).head(10) 
     Alphabetical_List  = Busiest_Airports.sort_values(by=['Origin Airport'])  

@@ -26,8 +26,8 @@ from Hydrogen.control_panels                   import *
 separator                  = os.path.sep 
 technology_filename        = '..' + separator + 'Data'  + separator + 'Technology' + separator +  'Technology_Data.xlsx'
 crops_filename             = '..' + separator + 'Data'  + separator +  'Crops'     + separator + 'All_Crops_2017.xlsx' 
-routes_filename            = '..' + separator + 'Data'  + separator + 'Air_Travel' + separator + 'American_Airlines_Flight_Ops_and_Climate.xlsx'
-temperature_filename       = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.xlsx'
+routes_filename            = '..' + separator + 'Data'  + separator + 'Air_Travel' + separator + 'Top_10_Major_US_Airlines_Flight_Ops_and_Climate.csv'
+temperature_filename       = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.csv'
 SAT_data                   = pd.read_excel(technology_filename,sheet_name=['Commercial_Batteries','Battery_Development','Electric_Motor_Development','Commercial_SAF', 'Hydrogen']) 
 
 Commercial_Batteries       = SAT_data['Commercial_Batteries'] 
@@ -52,11 +52,9 @@ a                          = Hydrogen['Feedstock']
 b                          = Hydrogen['Production Technology'] 
 c                          = Hydrogen['Production Process'] 
 Hydrogen["H2 Fuel Name"]   =  a  + ' via ' + b +  ' using ' + c 
-
-Flight_Ops                 = pd.read_excel(routes_filename,sheet_name=['Sheet1']) 
-Flight_Ops                 = Flight_Ops['Sheet1']  
-Temeperature_data          = pd.read_excel(temperature_filename,sheet_name=['US_County_Temperature_F'])  
-US_Temperature_F           = Temeperature_data['US_County_Temperature_F'] 
+ 
+Flight_Ops                 = pd.read_csv(routes_filename)    
+US_Temperature_F           = pd.read_csv(temperature_filename)   
 feedstocks                 = pd.read_excel(crops_filename,sheet_name=['Corn','Soybean','Canola','Sunflower','Sorghum','Wheat'])  
  
 
@@ -270,7 +268,7 @@ def render_content(tab):
                       dbc.Col([ dcc.Graph(id ="motor_metrics_figure", className="border-0 bg-transparent")],  xs=10, sm=11, md=8, lg=8, xl=8),
                     ]), 
             html.Div([    html.Br() ]),             
-            html.Div(["Annual Airline Flight Operations for Single U.S. Operator"], className="bg-primary text-white h4 p-2"), 
+            html.Div(["U.S. Domestic Operations"], className="bg-primary text-white h4 p-2"), 
             dbc.Row([  dbc.Col([battery_flight_ops_aircraft_panel ],  xs=10, sm=11, md=4, lg=4, xl=4),                    
                    dbc.Col([  
                        dbc.Card([  
@@ -356,7 +354,7 @@ def render_content(tab):
                 dbc.Col([ dcc.Graph(id="saf_production_map", className="border-0 bg-transparent")],  xs=10, sm=11, md=8, lg=8, xl=8),
                 ]),   
             html.Div([    html.Br() ]),             
-            html.Div(["Annual Airline Flight Operations for Single U.S. Operator"], className="bg-warning text-white h4 p-2"), 
+            html.Div(["U.S. Domestic Operations"], className="bg-warning text-white h4 p-2"), 
              
 
             dbc.Card([  
@@ -383,7 +381,7 @@ def render_content(tab):
                    dbc.Col([  
                        dbc.Card([  
                        dbc.Col([     
-                       html.Div(["Single US Operator Flight Routes"], className="text-sm-center h5"),
+                       html.Div(["U.S. Domestic Routes"], className="text-sm-center h5"),
                        dcc.Graph(id="saf_flight_ops_map", className="border-0 bg-transparent"), 
                        html.Div([    html.Br() ]),
                        html.Div(["Land Required for Single Feedstock Crop Production"], className="text-sm-center h5"),
@@ -428,7 +426,7 @@ def render_content(tab):
                        dbc.Col([  
                                dbc.Card([  
                                dbc.Col([     
-                                   html.Div(["Cost Per Seat Mile (Fuel Only)"], className="text-sm-center h5"),  
+                                   html.Div(["Cost Per Seat Mile (Energy Source Only)"], className="text-sm-center h5"),  
                                    dcc.Graph(id="saf_CASM", className="border-0 bg-transparent" ) ])
                                         ], className="border-0 bg-transparent") 
                                ],xs=10, sm=11, md=6, lg=6, xl=6),  
@@ -464,7 +462,7 @@ def render_content(tab):
                 #dbc.Col([ dcc.Graph(id="h2_production_map", className="border-0 bg-transparent")],  xs=10, sm=11, md=8, lg=8, xl=8),
                 #]),   
             #html.Div([    html.Br() ]),             
-            html.Div(["Annual Airline Flight Operations for Single U.S. Operator"], className="bg-info text-white h4 p-2"),  
+            html.Div(["U.S. Domestic Operations"], className="bg-info text-white h4 p-2"),  
             dbc.Card([  
                dbc.Col([  
                html.Div(["Select Hydrogen Fuel Types"], className="text-sm-center h5"), 
@@ -489,7 +487,7 @@ def render_content(tab):
                    dbc.Col([  
                        dbc.Card([  
                        dbc.Col([     
-                       html.Div(["Single US Operator Flight Routes"], className="text-sm-center h5"),
+                       html.Div(["U.S. Domestic Routes"], className="text-sm-center h5"),
                        dcc.Graph(id="h2_flight_ops_map", className="border-0 bg-transparent"),                   
                        ])
                        ], className="border-0 bg-transparent")
@@ -531,7 +529,7 @@ def render_content(tab):
                        dbc.Col([  
                                dbc.Card([  
                                dbc.Col([     
-                                   html.Div(["Cost Per Seat Mile (Fuel Only)"], className="text-sm-center h5"),  
+                                   html.Div(["Cost Per Seat Mile (Energy Source Only)"], className="text-sm-center h5"),  
                                    dcc.Graph(id="h2_CASM", className="border-0 bg-transparent" ) ])
                                         ], className="border-0 bg-transparent") 
                                ],xs=10, sm=11, md=6, lg=6, xl=6),  
@@ -804,11 +802,6 @@ def update_SAF_flight_ops_map(fuel_selection_list_1,fuel_selection_list_2,
                                     selected_airpots, percent_adoption,SAF_dollars_per_gal,switch_off)
     return saf_fig_3, saf_fig_4,saf_fig_5, saf_fig_6, saf_fig_7, saf_fig_8, saf_fig_9 , saf_fig_10  
 
-
-
-
-
-
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
 # Hydrogen Tab  
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -879,18 +872,6 @@ def update_H2_flight_ops_map(h2_selection_list_1,h2_selection_list_2,mean_SFC_Im
     
     return h2_fig_1, h2_fig_2, h2_fig_3, h2_fig_4,h2_fig_5 ,h2_fig_6 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
 # Energy Exploration Tab 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -900,10 +881,9 @@ def update_H2_flight_ops_map(h2_selection_list_1,h2_selection_list_2,mean_SFC_Im
     Input("color-mode-switch", "value"),
 )
 def update_US_bat_temperature_map(month_no,switch_off):
-    filename           = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.xlsx'
-    Temeperature_data  = pd.read_excel(filename,sheet_name=['US_County_Temperature_F'])  
-    US_Temperature_F   = Temeperature_data['US_County_Temperature_F'] 
-    fig_6              = generate_US_bat_temperature_map(US_Temperature_F,month_no,switch_off)  
+    temperature_filename = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.csv' 
+    US_Temperature_F     = pd.read_csv(temperature_filename)        
+    fig_6                = generate_US_bat_temperature_map(US_Temperature_F,month_no,switch_off)  
     return fig_6  
 
 
@@ -912,16 +892,12 @@ def update_US_bat_temperature_map(month_no,switch_off):
     Input("EX_aircraft_month", "value"),
     Input("color-mode-switch", "value"),
 )
-def update_EX_bat_temperature_map(month_no,switch_off):
-    filename           = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.xlsx'
-    Temeperature_data  = pd.read_excel(filename,sheet_name=['US_County_Temperature_F'])  
-    US_Temperature_F   = Temeperature_data['US_County_Temperature_F'] 
+def update_EX_bat_temperature_map(month_no,switch_off): 
+    temperature_filename = '..' + separator + 'Data' + separator  + 'US_Climate' + separator + 'Monthly_US_County_Temperature_2019.csv' 
+    US_Temperature_F     = pd.read_csv(temperature_filename) 
     fig_ex_6           = generate_US_EX_temperature_map(US_Temperature_F,month_no,switch_off)  
     return fig_ex_6   
- 
- 
-
-
+  
  
 @callback(
     Output("EX_flight_ops_map", "figure"),

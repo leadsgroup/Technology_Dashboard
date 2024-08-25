@@ -119,8 +119,8 @@ def select_h2_engine_SFC():
     h2_engine_SFC = html.Div(
         [
             dbc.Label("Hydrogen Engine SFC"),
-            dcc.Slider(0.1, 0.5, 0.1,
-                value=15,
+            dcc.Slider(0.1, 1.0, 0.1,
+                value=0.6,
                 id="h2_SFC", 
             ),
         ],

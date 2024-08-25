@@ -191,7 +191,7 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     Jet_A_LCA_val[0] = 89
         
     # Step 6: Filter flight data based on option selected: i.e. top 10, top 20, top 50, all airpots 
-    Airport_Routes     = Flight_Ops[['Passengers','Origin Airport','Destination City']]
+    Airport_Routes     = Flight_Ops[['Passengers','Origin Airport','Destination City Name']]
     Cumulative_Flights = Airport_Routes.groupby('Origin Airport', as_index=False).sum()[Airport_Routes.columns]
     if  selected_airpots == " Top 5 Airports":
         Busiest_Airports   = Cumulative_Flights.sort_values(by=['Passengers'], ascending = False).head(5) 
@@ -338,7 +338,7 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     fig_1.add_trace(go.Scattergeo( 
         lon = Flight_Ops['Destination Longitude (Deg.)'],
         lat = Flight_Ops['Destination Latitude (Deg.)'], 
-        text = Flight_Ops['Destination City'],
+        text = Flight_Ops['Destination City Name'],
         mode = 'markers',
         marker = dict(
             size = airport_marker_size,
@@ -347,7 +347,7 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     fig_1.add_trace(go.Scattergeo( 
         lon = Flight_Ops['Origin Longitude (Deg.)'],
         lat = Flight_Ops['Origin Latitude (Deg.)'], 
-        text = Flight_Ops['Origin City'],
+        text = Flight_Ops['Origin City Name'],
         mode = 'markers',
         marker = dict(
             size = airport_marker_size,
@@ -398,7 +398,7 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     # Busiest Airports 
     #================================================================================================================================================    
     fig_4 = go.Figure()
-    Airport_Routes     = Flight_at_SAF_Airports_Using_SAF[['Passengers','Origin Airport','Destination City']]
+    Airport_Routes     = Flight_at_SAF_Airports_Using_SAF[['Passengers','Origin Airport','Destination City Name']]
     Cumulative_Flights = Airport_Routes.groupby(['Origin Airport']).sum()
     Busiest_Airports   = Cumulative_Flights.sort_values(by=['Passengers'], ascending = False).head(10) 
     Alphabetical_List  = Busiest_Airports.sort_values(by=['Origin Airport'])  

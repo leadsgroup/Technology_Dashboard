@@ -270,6 +270,11 @@ def render_content(tab):
                     ]), 
             html.Div([    html.Br() ]),             
             html.Div(["U.S. Domestic Operations"], className="bg-primary text-white h4 p-2"), 
+            dbc.Card([  
+                 dbc.CardBody([
+                              html.H5('Results shown below are from a single U.S. Airline Operator (approx. 10,000 flights). Contact maclarke@illinois.edu for premium version displaying entire domestic operations of 100,000 flights.'),
+                            ], className='text-sm-center h5'),   
+                 ],body=True),          
             dbc.Row([  dbc.Col([battery_flight_ops_aircraft_panel ],  xs=10, sm=11, md=4, lg=4, xl=4),                    
                    dbc.Col([  
                        dbc.Card([  
@@ -371,7 +376,12 @@ def render_content(tab):
                html.Div(["Select States Where Feedstock (Crop) Is Sourced"], className="text-sm-center h5"), 
                saf_flight_ops_states_panel   
                ])
-               ], className="border-0 bg-transparent"),             
+               ], className="border-0 bg-transparent"),
+            dbc.Card([  
+                 dbc.CardBody([
+                              html.H5('Results shown below are from a single U.S. Airline Operator (approx. 10,000 flights). Contact maclarke@illinois.edu for premium version displaying entire domestic operations of 100,000 flights.'),
+                            ], className='text-sm-center h5'),   
+                 ],body=True),            
             dbc.Row([  dbc.Col([
                 dbc.Card([
                     feedstock,
@@ -474,7 +484,12 @@ def render_content(tab):
                    dcc.Graph(id="h2_color_ratio_dynamic_bar", className="border-0 bg-transparent" ),
                ], className="border-0 bg-transparent"),  
                ])
-               ], className="border-0 bg-transparent"),             
+               ], className="border-0 bg-transparent"),
+            dbc.Card([  
+                 dbc.CardBody([
+                              html.H5('Results shown below are from a single U.S. Airline Operator (approx. 10,000 flights). Contact maclarke@illinois.edu for premium version displaying entire domestic operations of 100,000 flights.'),
+                            ], className='text-sm-center h5'),   
+                 ],body=True),            
             dbc.Row([  dbc.Col([
                 dbc.Card([
                     h2_fleet_adoption, 
@@ -551,7 +566,12 @@ def render_content(tab):
     elif tab == 'tab-4': # ENERGY EX
         return dbc.Container([    
             html.Div([    html.Br() ]),              
-            html.Div(["Future Electrochemical Cell (Battery) Impact Predictor"], className="bg-secondary text-white h4 p-2"), 
+            html.Div(["Future Electrochemical Cell (Battery) Impact Predictor"], className="bg-secondary text-white h4 p-2"),
+            dbc.Card([  
+                 dbc.CardBody([
+                              html.H5('Results shown below are from a single U.S. Airline Operator (approx. 10,000 flights). Contact maclarke@illinois.edu for premium version displaying entire domestic operations of 100,000 flights.'),
+                            ], className='text-sm-center h5'),   
+                 ],body=True),            
             dbc.Row([  dbc.Col([  
                 html.Div(["Aircraft Parameterization"], className="text-sm-center h5"),                
                 Energy_X_aircraft_flight_ops_panel,  

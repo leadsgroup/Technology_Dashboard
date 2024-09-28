@@ -87,14 +87,14 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
     unused_volume_of_aircraft =  np.ones_like(percentage_capacity_of_aircraft) - percentage_capacity_of_aircraft
 
     # Subtract unused volume of aircraft from the volume fraction specified
-    additiona_volume_fractionl_required =  unused_volume_of_aircraft -  np.ones_like(percentage_capacity_of_aircraft)*volume_fraction
+    additional_volume_fractionl_required =  unused_volume_of_aircraft -  np.ones_like(percentage_capacity_of_aircraft)*volume_fraction
 
     # If required volume is negative, we do not need to remove passengers 
-    additiona_volume_fractionl_required[additiona_volume_fractionl_required>0] =  0
+    additional_volume_fractionl_required[additional_volume_fractionl_required<0] =  0
 
-    # If additiona_volume_fractionl_required is negative, we need to take off more passenger to accomodate H2 volume:
+    # If additional_volume_fractionl_required is negative, we need to take off more passenger to accomodate H2 volume:
     # Determine how many additional passengers must be removed from aircraft to meet specified volume fraction
-    Flight_Ops['H2_Passengers']  =   np.array(Flight_Ops['Passengers']) -  (1 + additiona_volume_fractionl_required) * np.array(Flight_Ops['Estimated Aircraft Capacity']) 
+    Flight_Ops['H2_Passengers']  =   np.array(Flight_Ops['Passengers']) -  (1 + additional_volume_fractionl_required) * np.array(Flight_Ops['Estimated Aircraft Capacity']) 
 
     # Compute the percentages of different types of fuels used 
     percentage_H2_process_vals  = [0]

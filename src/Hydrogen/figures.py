@@ -164,7 +164,7 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
             CASM_w_H2_Aircraft[m_i]         = 100*Total_Fuel_Cost_H2/ASM_H2   # convert to cents/pass-mile
 
         # CO2e of the Hydrogen-powered flights in the scenario with flight operations with H2 tech
-        CO2e_H2_aircraft_in_JetAH2_Fleet    = kg_to_Megaton * np.sum(np.array(H2_used['Direct GHG emissions [kg CO2e/kg H2]'])*percentage_H2_process)*H2_volumes_mo
+        CO2e_H2_aircraft_in_JetAH2_Fleet    = kg_to_Megaton * np.sum(np.array(H2_used['Direct GHG emissions [kg CO2e/kg H2]'])*percentage_H2_process)* (H2_volumes_mo * density_H2 )
 
         # CO2e of the JetA-powered flights in the scenario with flight operations with H2 tech        
         CO2e_JetA_aircraft_in_JetAH2_Fleet  = kg_to_Megaton * JetA_GHG * Non_H2_Flights_JetA_vol_mo *  density_JetA 

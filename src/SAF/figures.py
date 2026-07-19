@@ -86,66 +86,66 @@ def generate_saf_scatter_plot(Commercial_SAF,selected_process,selected_feedstock
     fig["layout"]["template"] = template 
     return fig 
 
-def generate_saf_dev_map(Commercial_SAF,selected_feedstock,selected_process,switch_off): 
-    template            = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
-    map_style           = None if switch_off else 'dark' 
+def generate_saf_dev_map(Commercial_SAF,selected_feedstock,selected_process,switch_off):
+    template            = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
     unique_feedstocks   = list(Commercial_SAF['Feedstock'][1:].unique())
-    unique_process      = list(Commercial_SAF['Process'][1:].unique())   
-    sector_colors       = px.colors.qualitative.Pastel 
-    mapbox_access_token = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ" 
-    
+    unique_process      = list(Commercial_SAF['Process'][1:].unique())
+    sector_colors       = px.colors.qualitative.Pastel
+
     fig = go.Figure()
-    if selected_feedstock == 'All' and  selected_process == 'All': 
+    if selected_feedstock == 'All' and  selected_process == 'All':
         for i in range(len(unique_feedstocks)):
             for j in range(len(unique_process)):
-                data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == unique_feedstocks[i]] 
-                data_2 = data_1.loc[Commercial_SAF['Process'] == unique_process[j]]   
-                fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+                data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == unique_feedstocks[i]]
+                data_2 = data_1.loc[Commercial_SAF['Process'] == unique_process[j]]
+                if data_2.empty: continue
+                fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                           hover_name="Fuel Name",
                                           hover_data=['Feedstock','Process','Source','Maximum Blend Ratio','LCA Value'],
                                          color_discrete_sequence=[sector_colors[i]], zoom=1 ,)
                 fig.add_trace(fig2.data[0])
-    
-    elif selected_feedstock == 'All' and  selected_process != 'All': 
-        for i in range(len(unique_feedstocks)): 
-            data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == unique_feedstocks[i]] 
-            data_2 = data_1.loc[Commercial_SAF['Process'] == selected_process]   
-            fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+
+    elif selected_feedstock == 'All' and  selected_process != 'All':
+        for i in range(len(unique_feedstocks)):
+            data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == unique_feedstocks[i]]
+            data_2 = data_1.loc[Commercial_SAF['Process'] == selected_process]
+            if data_2.empty: continue
+            fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                       hover_name="Fuel Name",
                                       hover_data=['Feedstock','Process','Source','Maximum Blend Ratio','LCA Value'],
                                      color_discrete_sequence=[sector_colors[i]], zoom=1 ,)
             fig.add_trace(fig2.data[0])
-            
-    
-    elif selected_feedstock != 'All' and  selected_process == 'All': 
+
+    elif selected_feedstock != 'All' and  selected_process == 'All':
         color_idx = unique_feedstocks.index(selected_feedstock)
-        for j in range(len(unique_process)): 
-            data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == selected_feedstock] 
-            data_2 = data_1.loc[Commercial_SAF['Process'] == unique_process[j]]  
-            fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+        for j in range(len(unique_process)):
+            data_1 = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == selected_feedstock]
+            data_2 = data_1.loc[Commercial_SAF['Process'] == unique_process[j]]
+            if data_2.empty: continue
+            fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                       hover_name="Fuel Name",
                                       hover_data=['Feedstock','Process','Source','Maximum Blend Ratio','LCA Value'],
                                      color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
-            fig.add_trace(fig2.data[0])      
-    
-    else:  
-        color_idx = unique_feedstocks.index(selected_feedstock)
-        data_1    = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == selected_feedstock] 
-        data_2    = data_1.loc[Commercial_SAF['Process'] == selected_process]
-        fig2      = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
-                                  hover_name="Fuel Name",
-                                  hover_data=["City"],
-                                 color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
-        fig.add_trace(fig2.data[0])          
+            fig.add_trace(fig2.data[0])
 
-    
+    else:
+        color_idx = unique_feedstocks.index(selected_feedstock)
+        data_1    = Commercial_SAF.loc[Commercial_SAF['Feedstock'] == selected_feedstock]
+        data_2    = data_1.loc[Commercial_SAF['Process'] == selected_process]
+        if not data_2.empty:
+            fig2      = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
+                                      hover_name="Fuel Name",
+                                      hover_data=["City"],
+                                     color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
+            fig.add_trace(fig2.data[0])
+
+
     fig.update_traces(marker={"size": 10})
-    fig.update_layout(mapbox_style  = "open-street-map",      
-                      showlegend    = False, 
-                      height        = 300, 
-                      margin        = {'t':0,'l':0,'b':0,'r':0}, 
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                          center=go.layout.mapbox.Center( lat=20, lon= 200 ))  )     
+    fig.update_layout(map_style   = "open-street-map",
+                      showlegend  = False,
+                      height      = 300,
+                      margin      = {'t':0,'l':0,'b':0,'r':0},
+                      map         = dict(center=dict(lat=20, lon=200)))
 
     fig["layout"]["template"] = template 
     return fig 
@@ -155,12 +155,9 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
                                     percent_fuel_use, feedstock_producing_states,selected_airpots,
                                     percent_adoption,SAF_dollars_per_gal,switch_off):   
      
-    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
-    map_style            = None if switch_off else 'dark'     
-    font_size            = 16  
-    mapbox_access_token  = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ"
-    separator = os.path.sep
-    file_path = '..'+ separator +'Data'+ separator +'US_County'+ separator +'counties_fips.json'
+    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
+    font_size            = 16
+    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Data', 'US_County', 'counties_fips.json')
     f = open(file_path) 
     counties = json.load(f)
 
@@ -193,11 +190,11 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     SAF_LCA_val           = np.zeros(num_fuels) 
     Jet_A_LCA_val         = np.zeros(num_fuels)  
 
-    # Loop through fuels and get percentage of fuel used by each type    
+    # Loop through fuels and get percentage of fuel used by each type
     for i in range(1,num_fuels):
-        blend_ratio             = np.array(Commercial_SAF.loc[Commercial_SAF['Fuel Name'] == selected_fuels[i]]['Maximum Blend Ratio']) 
-        cumulative_fuel_use[i]  = fuels_percentages[i]* blend_ratio/100
-        SAF_LCA_val[i]          = Commercial_SAF[Commercial_SAF['Fuel Name'] == selected_fuels[i]]['LCA Value']
+        blend_ratio             = float(Commercial_SAF.loc[Commercial_SAF['Fuel Name'] == selected_fuels[i]]['Maximum Blend Ratio'].values[0])
+        cumulative_fuel_use[i]  = fuels_percentages[i] * blend_ratio / 100
+        SAF_LCA_val[i]          = float(Commercial_SAF[Commercial_SAF['Fuel Name'] == selected_fuels[i]]['LCA Value'].values[0])
     cumulative_fuel_use[0]      = 1 - np.sum(cumulative_fuel_use[1:])
     SAF_LCA_val[0]   = 89
     Jet_A_LCA_val[0] = 89
@@ -261,7 +258,7 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
     available_tracts =len(Used_Feedstock)
     while total_vol<RCA: 
         total_vol += Used_Feedstock.loc[Used_Feedstock.index[idx]]['Acres Harvested']
-        Used_Feedstock["Feedstock Usage"][Used_Feedstock.index[idx]] = 0.1 
+        Used_Feedstock.loc[Used_Feedstock.index[idx], "Feedstock Usage"] = 0.1
         idx += 1      
         if available_tracts == idx:
             total_vol = 1E9  
@@ -371,14 +368,10 @@ def generate_saf_flight_operations_plots(Flight_Ops,Commercial_SAF,feedstocks,se
             size = airport_marker_size,
             color = airport_marker_color,))) 
      
-    # Flight Paths 
-    fig_1.update_layout(mapbox_style  = "open-street-map",      
-                      showlegend    = False, 
-                      height        = 400, 
+    fig_1.update_layout(showlegend    = False,
+                      height        = 400,
                       geo_scope     ='usa',
-                      margin        = {'t':0,'l':0,'b':0,'r':0},  
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                            center=go.layout.mapbox.Center( lat=30, lon= 230 )))   
+                      margin        = {'t':0,'l':0,'b':0,'r':0})
 
     #================================================================================================================================================      
     # Passenger vs Distance Traveled 

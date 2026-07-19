@@ -194,66 +194,66 @@ def generate_battery_spider_plot(Commercial_Batteries,bat_1,bat_2,bat_3,switch_o
     return fig 
 
 
-def generate_battery_dev_map(Battery_Development,selected_sector,selected_type,switch_off): 
-    template            = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
-    map_style           = None if switch_off else 'dark' 
+def generate_battery_dev_map(Battery_Development,selected_sector,selected_type,switch_off):
+    template            = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
     unique_sectors      = ['Industry', 'Academia', 'Government']
-    unique_types        = ['Li-Ion','Li-Sulphur','Metal-Air','Li-Silicon']  
-    sector_colors       = px.colors.qualitative.Pastel 
-    mapbox_access_token = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ" 
-    
+    unique_types        = ['Li-Ion','Li-Sulphur','Metal-Air','Li-Silicon']
+    sector_colors       = px.colors.qualitative.Pastel
+
     fig = go.Figure()
-    if selected_sector == 'All' and  selected_type == 'All': 
+    if selected_sector == 'All' and  selected_type == 'All':
         for i in range(len(unique_sectors)):
             for j in range(len(unique_types)):
-                data_1 = Battery_Development.loc[Battery_Development['Sector'] == unique_sectors[i]] 
-                data_2 = data_1.loc[Battery_Development[unique_types[j]] == 1]   
-                fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+                data_1 = Battery_Development.loc[Battery_Development['Sector'] == unique_sectors[i]]
+                data_2 = data_1.loc[Battery_Development[unique_types[j]] == 1]
+                if data_2.empty: continue
+                fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                           hover_name="Entity",
                                           hover_data=["City"],
                                          color_discrete_sequence=[sector_colors[i]], zoom=1 ,)
                 fig.add_trace(fig2.data[0])
-    
-    elif selected_sector == 'All' and  selected_type != 'All': 
-        for i in range(len(unique_sectors)): 
-            data_1 = Battery_Development.loc[Battery_Development['Sector'] == unique_sectors[i]] 
-            data_2 = data_1.loc[Battery_Development[selected_type] == 1]   
-            fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+
+    elif selected_sector == 'All' and  selected_type != 'All':
+        for i in range(len(unique_sectors)):
+            data_1 = Battery_Development.loc[Battery_Development['Sector'] == unique_sectors[i]]
+            data_2 = data_1.loc[Battery_Development[selected_type] == 1]
+            if data_2.empty: continue
+            fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                       hover_name="Entity",
                                       hover_data=["City"],
                                      color_discrete_sequence=[sector_colors[i]], zoom=1 ,)
             fig.add_trace(fig2.data[0])
-            
-    
-    elif selected_sector != 'All' and  selected_type == 'All': 
+
+    elif selected_sector != 'All' and  selected_type == 'All':
         color_idx = unique_sectors.index(selected_sector)
-        for j in range(len(unique_sectors)): 
-            data_1 = Battery_Development.loc[Battery_Development['Sector'] == selected_sector] 
-            data_2 = data_1.loc[Battery_Development[unique_types[j]] == 1]  
-            fig2   = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
+        for j in range(len(unique_sectors)):
+            data_1 = Battery_Development.loc[Battery_Development['Sector'] == selected_sector]
+            data_2 = data_1.loc[Battery_Development[unique_types[j]] == 1]
+            if data_2.empty: continue
+            fig2   = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
                                       hover_name="Entity",
                                       hover_data=["City"],
                                      color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
-            fig.add_trace(fig2.data[0])      
-    
-    else:  
-        color_idx = unique_sectors.index(selected_sector)
-        data_1    = Battery_Development.loc[Battery_Development['Sector'] == selected_sector] 
-        data_2    = data_1.loc[Battery_Development[selected_type] == 1]
-        fig2      = px.scatter_mapbox(data_2, lat="Latitude", lon="Longitude",
-                                  hover_name="Entity",
-                                  hover_data=["City"],
-                                 color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
-        fig.add_trace(fig2.data[0])          
+            fig.add_trace(fig2.data[0])
 
-    
+    else:
+        color_idx = unique_sectors.index(selected_sector)
+        data_1    = Battery_Development.loc[Battery_Development['Sector'] == selected_sector]
+        data_2    = data_1.loc[Battery_Development[selected_type] == 1]
+        if not data_2.empty:
+            fig2      = px.scatter_map(data_2, lat="Latitude", lon="Longitude",
+                                      hover_name="Entity",
+                                      hover_data=["City"],
+                                     color_discrete_sequence=[sector_colors[color_idx]], zoom=1 ,)
+            fig.add_trace(fig2.data[0])
+
+
     fig.update_traces(marker={"size": 10})
-    fig.update_layout(mapbox_style  = "open-street-map",      
-                      showlegend    = False, 
-                      height        = 300, 
-                      margin        = {'t':0,'l':0,'b':0,'r':0}, 
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                          center=go.layout.mapbox.Center( lat=20, lon= 200 ))  )     
+    fig.update_layout(map_style   = "open-street-map",
+                      showlegend  = False,
+                      height      = 300,
+                      margin      = {'t':0,'l':0,'b':0,'r':0},
+                      map         = dict(center=dict(lat=20, lon=200)))
 
     fig["layout"]["template"] = template 
     return fig
@@ -265,8 +265,7 @@ def generate_battery_dev_map(Battery_Development,selected_sector,selected_type,s
 def generate_US_bat_temperature_map(US_Temperature_F,month_no,switch_off):  
     template  = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
     font_size = 16
-    separator = os.path.sep
-    file_path = '..'+ separator +'Data'+ separator +'US_County'+ separator +'counties_fips.json'
+    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Data', 'US_County', 'counties_fips.json')
     f = open(file_path) 
     counties = json.load(f) 
     month = list(US_Temperature_F.columns.values)[6:18][month_no]  
@@ -289,10 +288,8 @@ def generate_US_bat_temperature_map(US_Temperature_F,month_no,switch_off):
     return us_temperature_map
 
 
-def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,airline,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off): 
-    mapbox_access_token  = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ"     
-    map_style            = None if switch_off else 'dark'  
-    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
+def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,airline,battery_choice,weight_fraction,system_voltage,propulsive_efficiency,percent_adoption,month_no,cost_of_electricity,switch_off):
+    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
     font_size            = 16      
 
  
@@ -660,22 +657,18 @@ def generate_flight_ops_map(Routes_and_Temp,Commercial_Batteries,aircraft,airlin
             size = airport_marker_size,
             color = airport_marker_color, ))) 
      
-    # Flight Paths 
-    fig_4.update_layout(mapbox_style  = "open-street-map",      
-                      showlegend    = False, 
-                      height        = 400, 
+    fig_4.update_layout(showlegend    = False,
+                      height        = 400,
                       geo_scope     ='usa',
-                      margin        = {'t':0,'l':0,'b':0,'r':0},  
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                            center=go.layout.mapbox.Center( lat=30, lon= 230 ))  )     
-    #================================================================================================================================================      
-    # Passenger vs Distance Traveled 
-    #================================================================================================================================================     
-    fig_5               = go.Figure() 
+                      margin        = {'t':0,'l':0,'b':0,'r':0})
+    #================================================================================================================================================
+    # Passenger vs Distance Traveled
+    #================================================================================================================================================
+    fig_5               = go.Figure()
     fig_5.add_trace(go.Histogram(histfunc="sum",
                                x= Feasible_Routes['Distance (miles)'],
                                y = Feasible_Routes['E_Passengers'],
-                               name='Electric', 
+                               name='Electric',
                                xbins=dict(start=0, end=4000, size=500),
                                marker_color=color_1,))
     fig_5.add_trace(go.Histogram(histfunc="sum",

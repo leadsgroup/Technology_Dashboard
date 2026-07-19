@@ -14,13 +14,11 @@ import os
 def generate_US_EX_temperature_map(US_Temperature_F,month_no,switch_off):  
     template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
     font_size            = 16   
-    separator            = os.path.sep
-    file_path            = '..'+ separator +'Data'+ separator +'US_County'+ separator +'counties_fips.json'
+    file_path            = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Data', 'US_County', 'counties_fips.json')
     f = open(file_path) 
     counties = json.load(f) 
-    month = list(US_Temperature_F.columns.values)[3:][month_no] 
-    fips  = list(US_Temperature_F['FIPS'])  
-    US_Temperature_F['FIPS'] = ["%05d" % i for i in fips] 
+    month = list(US_Temperature_F.columns.values)[3:][month_no]
+    US_Temperature_F['FIPS'] = US_Temperature_F['FIPS'].apply('{:0>5}'.format)
     us_temperature_map= px.choropleth(US_Temperature_F, geojson=counties, locations='FIPS', color = month,
                            color_continuous_scale="RdYlBu_r", 
                            hover_data=["Name","State", month],
@@ -39,10 +37,8 @@ def generate_US_EX_temperature_map(US_Temperature_F,month_no,switch_off):
     return us_temperature_map 
 
 def generate_EX_aircraft_flight_ops(Routes_and_Temp,system_voltage,weight_fraction,propulsive_efficiency,cell_V,
-                                              capacity,cell_C_max,cell_e0,cell_Temp,percent_adoption,month_no,cost_of_electricity,switch_off): 
-    mapbox_access_token  = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ"     
-    map_style            = None if switch_off else 'dark'  
-    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]    
+                                              capacity,cell_C_max,cell_e0,cell_Temp,percent_adoption,month_no,cost_of_electricity,switch_off):
+    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
     font_size            = 16       
  
  
@@ -350,14 +346,10 @@ def generate_EX_aircraft_flight_ops(Routes_and_Temp,system_voltage,weight_fracti
             size = airport_marker_size,
             color = airport_marker_color, ))) 
      
-    # Flight Paths 
-    fig_4.update_layout(mapbox_style  = "open-street-map",      
-                      showlegend    = False, 
-                      height        = 400, 
+    fig_4.update_layout(showlegend    = False,
+                      height        = 400,
                       geo_scope     ='usa',
-                      margin        = {'t':0,'l':0,'b':0,'r':0},  
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                            center=go.layout.mapbox.Center( lat=30, lon= 230 ))  )     
+                      margin        = {'t':0,'l':0,'b':0,'r':0})
     #================================================================================================================================================      
     # Passenger vs Distance Traveled 
     #================================================================================================================================================     

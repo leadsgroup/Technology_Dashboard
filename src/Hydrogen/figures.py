@@ -7,10 +7,8 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
 # iloc Plots 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------
-def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,mean_SFC_Imperial,h2_cruise_alt,h2_airports,percent_H2_color,h2_vol_percentage,h2_percent_adoption,H2_dollars_per_gal,switch_off): 
-    mapbox_access_token  = "pk.eyJ1IjoibWFjbGFya2UiLCJhIjoiY2xyanpiNHN6MDhsYTJqb3h6YmJjY2w5MyJ9.pQed7pZ9CnJL-mtqm1X8DQ"     
-    map_style            = None if switch_off else 'dark'  
-    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"] 
+def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,mean_SFC_Imperial,h2_cruise_alt,h2_airports,percent_H2_color,h2_vol_percentage,h2_percent_adoption,H2_dollars_per_gal,switch_off):
+    template             = pio.templates["minty"] if switch_off else pio.templates["minty_dark"]
     font_size            = 16    
      
     #================================================================================================================================================  
@@ -241,14 +239,10 @@ def generate_electric_flight_operations_plots(Flight_Ops,Hydrogen,selected_h2,me
             size = airport_marker_size,
             color = airport_marker_color,))) 
 
-    # Flight Paths 
-    fig_1.update_layout(mapbox_style  = "open-street-map",      
-                        showlegend    = False, 
-                      height        = 400, 
+    fig_1.update_layout(showlegend    = False,
+                      height        = 400,
                       geo_scope     ='usa',
-                      margin        = {'t':0,'l':0,'b':0,'r':0},  
-                      mapbox        = dict( accesstoken=mapbox_access_token,style=map_style,
-                                            center=go.layout.mapbox.Center( lat=30, lon= 230 )))   
+                      margin        = {'t':0,'l':0,'b':0,'r':0})
 
     #================================================================================================================================================      
     # Passenger vs Distance Traveled 

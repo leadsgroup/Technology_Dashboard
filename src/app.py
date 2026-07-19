@@ -177,43 +177,57 @@ hydrogen_tab_style = {
 }
 
 
-# app layout 
+# app layout
 app.layout = html.Div([
-    html.Div(["Sustainable Aviation Technology Dashboard"], className="bg-success text-center text-white h2 p-2"),
-    color_mode_switch,
-    dbc.Row([ 
+    dbc.Row([
+        dbc.Col(
+            html.Div(["Sustainable Aviation Technology Dashboard"], className="bg-success text-center text-white h2 p-2"),
+            width=11
+        ),
+        dbc.Col(
+            html.Div(color_mode_switch, className="d-flex align-items-center justify-content-end h-100 pe-3"),
+            width=1
+        ),
+    ], className="g-0"),
+    dbc.Row([
          dbc.Col([ ],  width=1),
-         dbc.Col([ 
-             dbc.Card([  
+         dbc.Col([
+             dbc.Card([
                  dbc.CardBody([
                               html.H5('Developed by the Laboratory for Emerging Aircraft Design and Systems (LEADS) at the University of Illinois Urbana-Champaign, the Sustainable Aviation Technology Dashboard is a platform to examine the integration of new energy sources such as sustainable aviation fuel (SAF), batteries and hydrogen propulsion technologies into future aircraft systems and assess their broader impact on society.'),
-                            ], className='text-sm-center h5'),   
-                 ],body=True)  
-             ],  width=10),  
-         dbc.Col([ ],  width=1),  
-         html.Div([ html.Br() ]),   
-        ]),  
+                            ], className='text-sm-center h5'),
+                 ], body=True)
+             ], width=10),
+         dbc.Col([ ],  width=1),
+         html.Div([ html.Br() ]),
+        ], className="mt-3"),
     dcc.Tabs(id="tabs-styled-with-inline", value='tab-1', children=[
         dcc.Tab(label='Electrification', value='tab-1', style=tab_style, selected_style=electrification_tab_style),
         dcc.Tab(label='Sustainable Aviation Fuel', value='tab-2', style=tab_style, selected_style=saf_tab_style),
         dcc.Tab(label='Hydrogen', value='tab-3', style=tab_style, selected_style=hydrogen_tab_style),
         dcc.Tab(label='Energy-eX(ploration)', value='tab-4', style=tab_style, selected_style=energy_ex_tab_style),
-    ],), 
-    html.Div(id='tabs-content-inline'), 
-    html.Div([    html.Br() ]),    
+    ],),
+    html.Div(id='tabs-content-inline'),
+    html.Div([    html.Br() ]),
     html.Div(["Contact Us"], className="bg-dark text-center text-white h2 p-2"),
-    dbc.Row([ 
+    dbc.Row([
          dbc.Col([ ],  width=1),
-         dbc.Col([ 
-             dbc.Card([   
+         dbc.Col([
+             dbc.Card([
                  dbc.CardBody([
-                              html.H5('Kindly direct any questions to Dr. Matthew Clarke by sending an email to maclarke@illinois.edu. Contribute to the Dashboard by sending us information on new commercial technology or technology under development at high TRL levels (i.e. TRL > 8) using this link https://forms.gle/YPKqAuXwPZsoKcSdA.'),
-                            ], className='text-sm-center h5'), 
-                 ],body=True)  
-             ],  width=10),  
-         dbc.Col([ ],  width=1),  
-         html.Div([ html.Br() ]),   
-        ]),     
+                              html.H5([
+                                  'Kindly direct any questions to Dr. Matthew Clarke by sending an email to ',
+                                  html.A('maclarke@illinois.edu', href='mailto:maclarke@illinois.edu'),
+                                  '. Contribute to the Dashboard by sending us information on new commercial technology or technology under development at high TRL levels (i.e. TRL > 8) using ',
+                                  html.A('this link', href='https://forms.gle/YPKqAuXwPZsoKcSdA', target='_blank'),
+                                  '.',
+                              ]),
+                            ], className='text-sm-center h5'),
+                 ], body=True)
+             ], width=10),
+         dbc.Col([ ],  width=1),
+         html.Div([ html.Br() ]),
+        ], className="mb-3"),
 ])
 
 
@@ -325,7 +339,7 @@ def render_content(tab):
                        dbc.Col([  
                                dbc.Card([  
                                dbc.Col([     
-                                   html.Div(["Cost Per Seat Mile (Energy Souce Only)"], className="text-sm-center h5"),  
+                                   html.Div(["Cost Per Seat Mile (Energy Source Only)"], className="text-sm-center h5"),
                                    dcc.Graph(id="electric_aircraft_CASM", className="border-0 bg-transparent" ) ])
                                         ], className="border-0 bg-transparent") 
                                ],xs=10, sm=11, md=6, lg=6, xl=6),  
@@ -557,7 +571,7 @@ def render_content(tab):
                        dbc.Col([  
                                 dbc.Card([  
                                     dbc.Col([     
-                                        html.Div(["Carbom Emissions"], className="text-sm-center h5"),  
+                                        html.Div(["Carbon Emissions"], className="text-sm-center h5"),  
                                         dcc.Graph(id="h2_CO2e", className="border-0 bg-transparent" ) ])
                                     ], className="border-0 bg-transparent") 
                                ],  xs=10, sm=11, md=6, lg=6, xl=6),    
@@ -632,7 +646,7 @@ def render_content(tab):
                        dbc.Col([  
                                dbc.Card([  
                                dbc.Col([     
-                                   html.Div(["Cost Per Seat Mile (Energy Souce Only)"], className="text-sm-center h5"),  
+                                   html.Div(["Cost Per Seat Mile (Energy Source Only)"], className="text-sm-center h5"),
                                    dcc.Graph(id="EX_aircraft_CASM", className="border-0 bg-transparent" ) ])
                                         ], className="border-0 bg-transparent") 
                                ],xs=10, sm=11, md=6, lg=6, xl=6),        

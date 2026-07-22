@@ -118,7 +118,7 @@ color_mode_switch =  html.Span(
 # Template  colors 
 primary_color     = '#78c2ad' # grey green
 secondary_color   = '#f3969a' # red  # SAF 
-backround         = '#212529'
+background        = '#212529'
 success_color     = '#56cc9d' # green Bat 
 info_color        = '#6cc3d5' # blue H2 
 light_color       = '#f8f9fa'
@@ -134,7 +134,7 @@ tab_style = {
     'padding': '6px', 
     'color': dark_color,
     'fontSize' : font_size,
-    'backgroundColor': backround,
+    'backgroundColor': background,
 }
 
 energy_ex_tab_style = {
